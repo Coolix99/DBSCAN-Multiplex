@@ -192,9 +192,6 @@ metric = 'minkowski', p = 2, verbose = True):
         (each sample corresponds to a row in 'data'). If metric is a string or callable, it must be compatible 
         with metrics.pairwise.pairwise_distances.
 
-    p : float, optional (default = 2)
-        If a Minkowski metric is used, 'p' determines its power.
-
     verbose : Boolean, optional (default = True)
         Whether to display messages reporting the status of the computations and the time it took 
         to complete each major stage of the algorithm. 
@@ -276,10 +273,8 @@ metric = 'minkowski', p = 2, verbose = True):
         quantile = np.rint(quantile)
         quantile = np.clip(quantile, 0, 100)
 
-        if metric=='minkowski':
-            k_distances = kneighbors_graph(data, minPts, mode = 'distance', metric = metric,p=p).data
-        else:
-            k_distances = kneighbors_graph(data, minPts, mode = 'distance', metric = metric).data
+    
+        k_distances = kneighbors_graph(data, minPts, mode = 'distance', metric = metric).data
  
         radii = np.zeros(N_samples, dtype = float)
         for i in range(0, minPts):
@@ -344,7 +339,7 @@ metric = 'minkowski', p = 2, verbose = True):
     for i in range(0, N_samples, chunks_size):
         chunk = data[i:min(i + chunks_size, N_samples)]
 
-        D = pairwise_distances(chunk, data, metric = metric, p = p, n_jobs = 1)
+        D = pairwise_distances(chunk, data, metric = metric, n_jobs = 1)
             
         D = (D <= eps)
 
