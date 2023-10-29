@@ -356,7 +356,7 @@ metric = 'minkowski', p = 2, verbose = True):
 
     beg_neigh = time.time()
 
-    fileh = tables.open_file(hdf5_file_name, mode = 'r')
+    fileh = tables.open_file(hdf5_file_name, mode = 'r+')
     DBSCAN_group = fileh.create_group(fileh.root, 'DBSCAN_group')
 
     neighborhoods_indices = fileh.create_earray(DBSCAN_group, 'neighborhoods_indices', tables.Int32Atom(), (0,), 
@@ -643,7 +643,7 @@ metric = 'minkowski', p = 2, verbose = True):
 
     labels_matrix = np.zeros((N_runs, N_samples), dtype = int)
 
-    with NamedTemporaryFile('w', suffix = '.h5', delete = True, dir = './') as f:
+    with NamedTemporaryFile('w', suffix = '.h5', delete = False, dir = './') as f:
         eps = load(f.name, data, minPts, eps, quantile, subsamples_matrix, samples_weights, metric, p, verbose)
 
         for run in range(N_runs):
