@@ -128,6 +128,7 @@ def get_chunk_size(N, n):
     """
 
     mem_free = memory()['free']
+    print("free memory:", mem_free)
     if mem_free > 60000000:
         chunks_size = int(((mem_free - 10000000) * 1000) / (4 * n * N))
         return chunks_size
