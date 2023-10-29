@@ -75,6 +75,7 @@ import tables
 from tempfile import NamedTemporaryFile
 import time
 import warnings
+import psutil
 
 import numpy as np
 from sklearn.metrics.pairwise import pairwise_distances
@@ -98,52 +99,12 @@ def memory():
         Holds the current values for the total, free and used memory of the system.
 
     """
-
     mem_info = {}
+    virtual_memory = psutil.virtual_memory()
 
-    if platform.linux_distribution()[0]:
-        with open('/proc/meminfo') as file:
-            c = 0
-            for line in file:
-                lst = line.split()
-                if str(lst[0]) == 'MemTotal:':
-                    mem_info['total'] = int(lst[1])
-                elif str(lst[0]) in ('MemFree:', 'Buffers:', 'Cached:'):
-                    c += int(lst[1])
-            mem_info['free'] = c
-            mem_info['used'] = (mem_info['total']) - c
-    elif platform.mac_ver()[0]:
-        ps = subprocess.Popen(['ps', '-caxm', '-orss,comm'], stdout=subprocess.PIPE).communicate()[0]
-        vm = subprocess.Popen(['vm_stat'], stdout=subprocess.PIPE).communicate()[0]
-
-        # Iterate processes
-        process_lines = ps.split('\n')
-        sep = re.compile('[\s]+')
-        rss_total = 0  # kB
-        for row in range(1, len(process_lines)):
-            row_text = process_lines[row].strip()
-            row_elements = sep.split(row_text)
-            try:
-                rss = float(row_elements[0]) * 1024
-            except:
-                rss = 0  # ignore...
-            rss_total += rss
-
-        # Process vm_stat
-        vm_lines = vm.split('\n')
-        sep = re.compile(':[\s]+')
-        vm_stats = {}
-        for row in range(1, len(vm_lines) - 2):
-            row_text = vm_lines[row].strip()
-            row_elements = sep.split(row_text)
-            vm_stats[(row_elements[0])] = int(row_elements[1].strip('\.')) * 4096
-
-        mem_info['total'] = rss_total
-        mem_info['used'] = vm_stats["Pages active"]
-        mem_info['free'] = vm_stats["Pages free"]
-    else:
-        raise('Unsupported Operating System.\n')
-        exit(1)
+    mem_info['total'] = virtual_memory.total
+    mem_info['free'] = virtual_memory.available  
+    mem_info['used'] = virtual_memory.used
 
     return mem_info
 
@@ -649,7 +610,8 @@ metric = 'minkowski', p = 2, verbose = True):
         for run in range(N_runs):
             _, labels = shoot(f.name, minPts, sample_ID = run, verbose = verbose)
             labels_matrix[run] = labels
-
+    # tf.close()
+    # os.unlink(tf.name)
     return eps, labels_matrix
 
 
