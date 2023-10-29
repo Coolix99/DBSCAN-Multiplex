@@ -130,22 +130,22 @@ def get_chunk_size(N, n):
     mem_free = memory()['free']
     print("free memory:", mem_free)
     if mem_free > 60000000:
-        chunks_size = int(((mem_free - 10000000) * 1000) / (4 * n * N))
+        chunks_size = int(((mem_free - 10000000) * 100) / (4 * n * N))
         return chunks_size
     elif mem_free > 40000000:
-        chunks_size = int(((mem_free - 7000000) * 1000) / (4 * n * N))
+        chunks_size = int(((mem_free - 7000000) * 100) / (4 * n * N))
         return chunks_size
     elif mem_free > 14000000:
-        chunks_size = int(((mem_free - 2000000) * 1000) / (4 * n * N))
+        chunks_size = int(((mem_free - 2000000) * 100) / (4 * n * N))
         return chunks_size
     elif mem_free > 8000000:
-        chunks_size = int(((mem_free - 1400000) * 1000) / (4 * n * N))
+        chunks_size = int(((mem_free - 1400000) * 100) / (4 * n * N))
         return chunks_size
     elif mem_free > 2000000:
-        chunks_size = int(((mem_free - 900000) * 1000) / (4 * n * N))
+        chunks_size = int(((mem_free - 900000) * 100) / (4 * n * N))
         return chunks_size
     elif mem_free > 1000000:
-        chunks_size = int(((mem_free - 400000) * 1000) / (4 * n * N))
+        chunks_size = int(((mem_free - 400000) * 100) / (4 * n * N))
         return chunks_size
     else:
         raise MemoryError("\nERROR: DBSCAN_multiplex @ get_chunk_size:\n"
@@ -337,6 +337,7 @@ metric = 'minkowski', p = 2, verbose = True):
                                            filters = None)   
 
     chunks_size = get_chunk_size(N_samples, 3)
+    print('chunks_size ',chunks_size)
     for i in range(0, N_samples, chunks_size):
         chunk = data[i:min(i + chunks_size, N_samples)]
 
