@@ -276,7 +276,10 @@ metric = 'minkowski', p = 2, verbose = True):
         quantile = np.rint(quantile)
         quantile = np.clip(quantile, 0, 100)
 
-        k_distances = kneighbors_graph(data, minPts, mode = 'distance', metric = metric, p = p).data
+        if metric=='minkowski':
+            k_distances = kneighbors_graph(data, minPts, mode = 'distance', metric = metric,p=p).data
+        else:
+            k_distances = kneighbors_graph(data, minPts, mode = 'distance', metric = metric).data
  
         radii = np.zeros(N_samples, dtype = float)
         for i in range(0, minPts):
