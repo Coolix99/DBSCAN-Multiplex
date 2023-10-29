@@ -356,7 +356,7 @@ metric = 'minkowski', p = 2, verbose = True):
 
     beg_neigh = time.time()
 
-    fileh = tables.open_file(hdf5_file_name, mode = 'r+')
+    fileh = tables.open_file(hdf5_file_name, mode = 'r')
     DBSCAN_group = fileh.create_group(fileh.root, 'DBSCAN_group')
 
     neighborhoods_indices = fileh.create_earray(DBSCAN_group, 'neighborhoods_indices', tables.Int32Atom(), (0,), 
